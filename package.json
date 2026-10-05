@@ -1,0 +1,22 @@
+{
+  "name": "maganghub-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "cron": "node scripts/cron.js"
+  },
+  "dependencies": {
+    "leaflet": "1.9.4",
+    "next": "16.3.8",
+    "node-cron": "4.6.0",
+    "pg": "8.23.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-is": "19.3.0",
+    "react-leaflet": "4.2.1",
+    "recharts": "3.10.1"
+  }
+}
