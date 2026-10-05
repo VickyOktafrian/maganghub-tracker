@@ -23,9 +23,9 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/lib ./lib
+COPY --from=deps /app/node_modules/node-cron ./node_modules/node-cron
 
 USER nextjs
 
