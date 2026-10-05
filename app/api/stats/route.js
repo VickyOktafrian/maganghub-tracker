@@ -1,5 +1,5 @@
 import db from '@/lib/db';
-import { cityCoords, normalizeCity } from '@/lib/city-coords';
+import { cityCoords, normalizeCity, provinceOf } from '@/lib/city-coords';
 
 export async function GET() {
   const timeline = (await db.query(
@@ -15,5 +15,11 @@ export async function GET() {
     const coords = cityCoords[normalizeCity(kota)];
     return coords ? [{ kota, jumlah, lat: coords[0], lng: coords[1] }] : [];
   });
-  return Response.json({ timeline, topCompanies, topCities, mapPoints });
+  const provGroup = {};
+  topCities.forEach(({ kota, jumlah }) => {
+    const prov = provinceOf(kota);
+    provGroup[prov] = (provGroup[prov] || 0) + jumlah;
+  });
+  const topProvinces = Object.entries(provGroup).map(([provinsi, jumlah]) => ({ provinsi, jumlah })).sort((a, b) => b.jumlah - a.jumlah).slice(0, 10);
+  return Response.json({ timeline, topCompanies, topCities, mapPoints, topProvinces });
 }
