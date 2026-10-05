@@ -14,6 +14,7 @@ export default function Page() {
   const [provFilter, setProvFilter] = useState('Semua');
   const [q, setQ] = useState({ keyword: '', company: '' });
   const [results, setResults] = useState(null);
+  const [searching, setSearching] = useState(false);
 
   useEffect(() => {
     fetch('/api/stats').then(r => r.json()).then(setData);
@@ -21,12 +22,14 @@ export default function Page() {
 
   const submitSearch = async (e) => {
     e.preventDefault();
+    setSearching(true);
     try {
       const res = await fetch(`/api/search?keyword=${encodeURIComponent(q.keyword)}&company=${encodeURIComponent(q.company)}`);
       setResults(await res.json());
     } catch (err) {
       setResults({ total: 0, items: [], notes: ['Gagal fetch: ' + err.message] });
     }
+    setSearching(false);
   };
 
   const submitAlert = async (e) => {
@@ -135,7 +138,7 @@ export default function Page() {
         <form onSubmit={submitSearch} style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <input type="text" placeholder="Keyword (misal: backend)" value={q.keyword} onChange={e => setQ({ ...q, keyword: e.target.value })} style={{ flex: '1 1 200px', padding: 8, background: '#111', border: '1px solid #333', color: '#e5e5e5', borderRadius: 4 }} />
           <input type="text" placeholder="Perusahaan (opsional)" value={q.company} onChange={e => setQ({ ...q, company: e.target.value })} style={{ flex: '1 1 200px', padding: 8, background: '#111', border: '1px solid #333', color: '#e5e5e5', borderRadius: 4 }} />
-          <button type="submit" style={{ padding: '8px 16px', background: '#f97316', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontWeight: 600 }}>Cari</button>
+          <button type="submit" disabled={searching} style={{ padding: '8px 16px', background: '#f97316', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontWeight: 600, opacity: searching ? 0.6 : 1 }}>{searching ? 'Mencari...' : 'Cari'}</button>
         </form>
         {results && (
           <div style={{ marginTop: 12, background: '#111', padding: 12, borderRadius: 4 }}>
