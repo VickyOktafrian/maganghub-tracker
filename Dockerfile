@@ -25,7 +25,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/lib ./lib
-COPY --from=deps /app/node_modules/node-cron ./node_modules/node-cron
+COPY --from=builder /app/package.json ./package.json
+
+RUN npm install --omit=dev --legacy-peer-deps pg node-cron
 
 USER nextjs
 

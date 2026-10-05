@@ -17,7 +17,21 @@ export default function Page() {
   const [searching, setSearching] = useState(false);
 
   useEffect(() => {
-    fetch('/api/stats').then(r => r.json()).then(setData);
+    fetch('/api/stats').then(async (r) => {
+      const data = await r.json();
+      if (data.error) {
+        setMsg('⚠ DB: ' + data.error);
+        data.timeline = data.timeline || [];
+        data.topCompanies = data.topCompanies || [];
+        data.topCities = data.topCities || [];
+        data.mapPoints = data.mapPoints || [];
+        data.topProvinces = data.topProvinces || [];
+      }
+      setData(data);
+    }).catch(() => {
+      setData({ timeline: [], topCompanies: [], topCities: [], mapPoints: [], topProvinces: [] });
+      setMsg('⚠ Tidak bisa konek ke server.');
+    });
   }, []);
 
   const submitSearch = async (e) => {
